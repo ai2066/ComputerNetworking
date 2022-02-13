@@ -30,7 +30,7 @@ def welcome_assignment_answers(question):
 
 if __name__ == "__main__":
     #use this space to debug and verify that the program works
-    debug_question = "Is it possible to decrypt a message without a key? - Yes/No1"
+    debug_question = "Is it possible to decrypt a message without a key? - Yes/No"
     print(welcome_assignment_answers(debug_question))
 
 ###Questions:
