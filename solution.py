@@ -1,8 +1,7 @@
 from socket import *
 
-
 def smtp_client(port=1025, mailserver='127.0.0.1'):
-    msg = "\r\n Message Test by Ashiq Islam"
+    msg = "\r\n My message"
     endmsg = "\r\n.\r\n"
 
     # Create socket called clientSocket and establish a TCP connection with mailserver and port
