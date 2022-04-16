@@ -59,7 +59,7 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         if type != 8 and packetID == ID:
             bytesInDouble = struct.calcsize("d")
             timeSent = struct.unpack("d", recPacket[28:28 + bytesInDouble])[0]
-            rTrip = (timeReceived - timeTo)*1000
+            rTrip = (timeReceived - timeSent)*1000
 
         rTrip_min = min(rTrip_min, rTrip)
         rTrip_max = max(rTrip_max, rTrip)
