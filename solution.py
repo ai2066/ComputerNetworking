@@ -8,7 +8,6 @@ import binascii
 
 # Should use stdev
 from statistics import stdev
-ICMP_ECHO_REQUEST = 8
 
 # ASHIQ ISLAM
 # Computer Networking - Spring 2022
@@ -41,6 +40,7 @@ def checksum(string):
 
 def receiveOnePing(mySocket, ID, timeout, destAddr):
     timeLeft = timeout
+    global rTrip_min, rTrip_max, rTrip_count, rTrip_sum, rTrip_stdevList
 
     while 1:
         startedSelect = time.time()
@@ -59,9 +59,17 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         if type != 8 and packetID == ID:
             bytesInDouble = struct.calcsize("d")
             timeSent = struct.unpack("d", recPacket[28:28 + bytesInDouble])[0]
-            return timeReceived - timeSent
+            rTrip = (timeReceived - timeTo)*1000
+
+        rTrip_min = min(rTrip_min, rTrip)
+        rTrip_max = max(rTrip_max, rTrip)
+        rTrip_count += 1
+        rTrip_sum += rTrip
+        rTrip_stdevList.append(rTrip)
 
         # Fetch the ICMP header from the IP packet
+
+        return rTrip
 
         # Fill in end
         timeLeft = timeLeft - howLongInSelect
@@ -111,6 +119,13 @@ def doOnePing(destAddr, timeout):
 
 
 def ping(host, timeout=1):
+    global rTrip_count, rTrip_sum, rTrip_min, rTrip_max, rTrip_stdevList
+    rTrip_min = float('+inf')
+    rTrip_max = float('-inf')
+    rTrip_count = 0
+    rTrip_sum = 0
+    rTrip_stdevList = []
+    count = 0
     # timeout=1 means: If one second goes by without a reply from the server,
     # the client assumes that either the client's ping or the server's pong is lost
     dest = gethostbyname(host)
@@ -119,31 +134,23 @@ def ping(host, timeout=1):
 
     # Send ping requests to a server separated by approximately one second
     # Add something here to collect the delays of each ping in a list so you can calculate vars after your ping
-    ttl = []
     for i in range(0, 4):  # Four pings will be sent (loop runs for i=0, 1, 2, 3)
         delay = doOnePing(dest, timeout)
+        count += 1
+        packet_min = rTrip_min
+        packet_max = rTrip_max
+        stdev_var = rTrip_stdevList        
         print(delay)
         time.sleep(1)  # one second
-        ttl.append(delay)
 
-    # You should have the values of delay for each ping here; fill in calculation for packet_min, packet_avg, packet_max, and stdev
-    #packet_min = 
-    # vars = [str(round(packet_min, 8)), str(round(packet_avg, 8)), str(round(packet_max, 8)),str(round(stdev(stdev_var), 8))]
-    
-    #return vars
-    
-    print("")
-    print("Google.co.il Ping Stats")
-    print("")
-    print("Ping statistics for " + dest + ":")
-    packet_min = (min(ttl)) * 1000
-    packet_max = (max(ttl)) * 1000
-    packet_avg = ((sum(ttl)) / 4) * 1000
-    stdev_var = (stdev(ttl)) * 1000
-    print("('" + str(round(packet_min, 2)) + "','" + str(round(packet_max, 2)) + "','" + str(
-        round(packet_avg, 2)) + "','" + str(round(stdev_var, 2)) + "')")
-
-    vars = [(round(packet_min, 2)), (round(packet_avg, 2)),(round(packet_max, 2)), (round(stdev_var, 2))]
+    if count != 0:
+        packet_avg = rTrip_sum / rTrip_count
+        vars = [str(round(packet_min, 4)), str(round(packet_avg, 4)), str(round(packet_max, 4)),str(round(statistics.stdev(stdev_var), 4))]
+    else:
+        vars = []
+        packet_avg = 0
+        
+    #print(vars)
 
     return vars
 
