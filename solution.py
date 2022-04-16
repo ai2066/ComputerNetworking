@@ -1,3 +1,4 @@
+import statistics
 from socket import *
 import os
 import sys
@@ -7,7 +8,6 @@ import select
 import binascii
 
 # Should use stdev
-from statistics import stdev
 
 # ASHIQ ISLAM
 # Computer Networking - Spring 2022
