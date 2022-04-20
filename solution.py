@@ -37,6 +37,13 @@ def checksum(string):
     return answer
  
 def build_packet():
+    ID = 11238
+    myChecksum = 0
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+    data = struct.pack("d", time.time())
+    myChecksum = checksum(header + data)
+    myChecksum = socket.htons(myChecksum)
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     #Fill in start
     # In the sendOnePing() method of the ICMP Ping exercise ,firstly the header of our
     # packet to be sent was made, secondly the checksum was appended to the header and
@@ -44,21 +51,14 @@ def build_packet():
 
     # Make the header in a similar way to the ping exercise.
     # Append checksum to the header.
-	ID = 11238
-	myChecksum = 0
-	header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
-	data = struct.pack("d", time.time())
-	myChecksum = checksum(header + data)
-	myChecksum = socket.htons(myChecksum)
-	header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
 
     # Don’t send the packet yet , just return the final packet in this function.
     #Fill in end
 
     # So the function ending should look like this
 
-    	packet = header + data
-    	return packet
+    packet = header + data
+    return packet
  
 def get_route(hostname):
     timeLeft = TIMEOUT
