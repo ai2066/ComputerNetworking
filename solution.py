@@ -45,12 +45,12 @@ def build_packet():
     # Make the header in a similar way to the ping exercise.
     # Append checksum to the header.
 	ID = 11238
-    myChecksum = 0
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
-    data = struct.pack("d", time.time())
-    myChecksum = checksum(header + data)
-    myChecksum = socket.htons(myChecksum)
-    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+	myChecksum = 0
+	header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
+	data = struct.pack("d", time.time())
+	myChecksum = checksum(header + data)
+	myChecksum = socket.htons(myChecksum)
+	header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
 
     # Don’t send the packet yet , just return the final packet in this function.
     #Fill in end
@@ -122,3 +122,4 @@ def get_route(hostname):
 				
 if __name__ == '__main__':
 	get_route("google.co.il")
+	
