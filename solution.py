@@ -83,12 +83,12 @@ def get_route(hostname):
                 whatReady = select.select([mySocket], [], [], timeLeft)
                 timeInSelect = time.time() - sSelect
                 if whatReady[0] == []:
-                    print "   *         *            *          Request timed out."
+                    print ("   *         *            *          Request timed out.")
                 receivedPacket, addr = mySocket.recvfrom(1024)
                 timeReceived = time.time()
                 timeLeft = timeLeft - timeInSelect
                 if timeLeft <= 0:
-                    print "   *         *            *          Request timed out."
+                    print ("   *         *            *          Request timed out.")
             except socket.timeout:
                 continue
 
@@ -103,32 +103,32 @@ def get_route(hostname):
                 if type == 11:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", receivedPacket[28 : 28 + bytes])[0]
-                    print "   %d     rtt=%.0f ms    %s" % (
+                    print ("   %d     rtt=%.0f ms    %s" % (
                         ttl,
                         (timeReceived - t) * 1000,
                         addr[0],
-                    )
+                    ))
 
                 elif type == 3:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", receivedPacket[28 : 28 + bytes])[0]
-                    print "   %d     rtt=%.0f ms    %s" % (
+                    print ("   %d     rtt=%.0f ms    %s" % (
                         ttl,
                         (timeReceived - t) * 1000,
                         addr[0],
-                    )
+                    ))
 
                 elif type == 0:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", receivedPacket[28 : 28 + bytes])[0]
-                    print "   %d     rtt=%.0f ms    %s" % (
+                    print ("   %d     rtt=%.0f ms    %s" % (
                         ttl,
                         (timeReceived - t) * 1000,
                         addr[0],
-                    )
+                    ))
                     return
                 else:
-                    print " ERROR "
+                    print (" ERROR ")
                 break
 
             finally:
