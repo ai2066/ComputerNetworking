@@ -57,8 +57,8 @@ def build_packet():
 
     # So the function ending should look like this
 
-    packet = header + data
-    return packet
+    	packet = header + data
+    	return packet
  
 def get_route(hostname):
     timeLeft = TIMEOUT
